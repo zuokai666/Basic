@@ -33,6 +33,9 @@ public interface IdGenerator {
 	 * 如果seq从1000开始，就不会涉及到缺位的问题，这样每个进程每毫秒最多9000个序列
 	 */
 	int SERIAL_LENGTH = 4;
+	int SERIAL_MIN = 1000;
+	int SERIAL_MAX = 9999;
+	
 	
 	int TOTAL_LENGTH = TIME_LENGTH + DATACENTER_LENGTH + MACHINE_LENGTH + PROCESS_LENGTH + SERIAL_LENGTH;
 	
