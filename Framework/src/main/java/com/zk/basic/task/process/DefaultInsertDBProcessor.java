@@ -3,10 +3,13 @@ package com.zk.basic.task.process;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +28,7 @@ public class DefaultInsertDBProcessor implements InsertDBProcessor{
 	private CountDownLatch countDownLatch;
 	private String[] EOD_FLAG = new String[1];
 	private IdGenerator idGenerator;
+	private AtomicBoolean error = new AtomicBoolean(false);
 	
 	public DefaultInsertDBProcessor(DBConfig dbConfig) {
 		this.dbConfig = dbConfig;
@@ -39,18 +43,52 @@ public class DefaultInsertDBProcessor implements InsertDBProcessor{
 		for(int i=0;i<dbConfig.getThreadCount();i++){
 			this.executor.execute(new InsertDbRunnable(DefaultInsertDBProcessor.this));
 		}
+		try {
+			Connection connection = DriverManager.getConnection(dbConfig.getUrl(), dbConfig.getUser(), dbConfig.getPassword());
+			connection.setAutoCommit(false);
+			Statement statement = connection.createStatement();
+			for(int i=0;i<dbConfig.getSqlHolder().getPreSql().size();i++){
+				String sql = dbConfig.getSqlHolder().getPreSql().get(i);
+				statement.execute(sql);
+				log.debug("脚本执行：[{}]", sql);
+			}
+			statement.close();
+			connection.close();
+		} catch (SQLException e) {
+			log.error("", e);
+		}
 	}
 	
 	@Override
 	public void handle(String[] values) {
-		queue.add(values);
+		if(error.get()){
+			if(queue != null){
+				for(int i=0;i<dbConfig.getThreadCount();i++){
+					try {
+						queue.put(EOD_FLAG);
+					} catch (InterruptedException e) {
+						log.error("", e);
+					}
+				}
+			}
+			throw new RuntimeException("批量线程异常");
+		}
+		try {
+			queue.put(values);
+		} catch (InterruptedException e) {
+			log.error("", e);
+		}
 	}
 	
 	@Override
 	public void end() {
 		if(queue != null){
 			for(int i=0;i<dbConfig.getThreadCount();i++){
-				queue.add(EOD_FLAG);
+				try {
+					queue.put(EOD_FLAG);
+				} catch (InterruptedException e) {
+					log.error("", e);
+				}
 			}
 			try {
 				countDownLatch.await();
@@ -74,6 +112,7 @@ public class DefaultInsertDBProcessor implements InsertDBProcessor{
 		@Override
 		public void run() {
 			try {
+				int count = 0;
 				SqlHolder sqlHolder = dbProcessor.dbConfig.getSqlHolder();
 				Connection connection = DriverManager.getConnection(
 								dbProcessor.dbConfig.getUrl(), 
@@ -88,10 +127,20 @@ public class DefaultInsertDBProcessor implements InsertDBProcessor{
 						preparedStatement.setObject(i + 2, values[i]);
 					}
 					preparedStatement.addBatch();
+					count++;
+					if(count % dbProcessor.dbConfig.getCommitCount() == 0){
+						preparedStatement.executeBatch();
+						connection.commit();
+						preparedStatement.clearBatch();
+						log.debug("执行条数：[{}]", count);
+					}
 				}
 				preparedStatement.executeBatch();
 				connection.commit();
+				preparedStatement.clearBatch();
+				log.debug("执行条数：[{}]", count);
 			} catch (Throwable t) {
+				dbProcessor.error.compareAndSet(false, true);
 				log.error("", t);
 			} finally {
 				dbProcessor.countDownLatch.countDown();

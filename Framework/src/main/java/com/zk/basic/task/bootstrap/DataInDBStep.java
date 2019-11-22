@@ -6,8 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.zk.basic.id.IdGenerator;
-import com.zk.basic.id.impl.DefaultIdGenerator;
 import com.zk.basic.id.impl.DefaultIdGeneratorProperties;
+import com.zk.basic.id.impl.SimpleIdGenerator;
 import com.zk.basic.task.executor.SimpleExecutor;
 import com.zk.basic.task.process.FileProcessor;
 import com.zk.basic.task.process.InsertDBProcessor;
@@ -55,7 +55,7 @@ public class DataInDBStep extends AbstractStep{
 		String dataCenterId = DefaultIdGeneratorProperties.dataCenterId;
 		String machineId = DefaultIdGeneratorProperties.machineId;
 		String processId = DefaultIdGeneratorProperties.processId;
-		IdGenerator defaultIdGenerator = new DefaultIdGenerator(dataCenterId, machineId, processId);
+		IdGenerator defaultIdGenerator = new SimpleIdGenerator(dataCenterId, machineId, processId);
 		return defaultIdGenerator;
 	}
 }

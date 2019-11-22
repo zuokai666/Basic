@@ -11,7 +11,7 @@ public class DefaultDBConfig implements DBConfig{
     private String password;
     private SqlHolder sqlHolder;
 	
-	public DefaultDBConfig(int commitCount, int threadCount, String url, String user, String password, SqlHolder sqlHolder) {
+	public DefaultDBConfig(int threadCount, int commitCount, String url, String user, String password, SqlHolder sqlHolder) {
 		this.commitCount = commitCount;
 		this.threadCount = threadCount;
 		this.url = url;

@@ -20,7 +20,8 @@ public class TaskTest {
 		FileProcessor fileProcessor = new DefaultFileProcessor(fileConfig);
 		
 		SqlHolder sqlHolder = new DefaultSqlHolder("insert into Person(no,name,sex,age)values(?,?,?,?)");
-		DBConfig dbConfig = new DefaultDBConfig(10, 10, "jdbc:mysql://localhost:3306/test", "root", "d2p9bupt", sqlHolder);
+		sqlHolder.addPreSql("truncate table Person");
+		DBConfig dbConfig = new DefaultDBConfig(50, 500, "jdbc:mysql://localhost:3306/test", "root", "d2p9bupt", sqlHolder);
 		InsertDBProcessor insertDBProcessor = new DefaultInsertDBProcessor(dbConfig);
 		
 		SimpleJobLauncher jobLauncher = new SimpleJobLauncher();
