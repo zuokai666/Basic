@@ -10,14 +10,17 @@ import com.zk.basic.task.process.DefaultFileProcessor;
 import com.zk.basic.task.process.DefaultInsertDBProcessor;
 import com.zk.basic.task.process.FileProcessor;
 import com.zk.basic.task.process.InsertDBProcessor;
+import com.zk.basic.task.sql.DefaultSqlHolder;
+import com.zk.basic.task.sql.SqlHolder;
 
 public class TaskTest {
-
+	
 	public static void main(String[] args) {
-		FileConfig fileConfig = new DefaultFileConfig(false, 0, "UTF-8", "D:\test.txt", ",");
+		FileConfig fileConfig = new DefaultFileConfig(false, 0, "UTF-8", "D:\\test.txt", ",");
 		FileProcessor fileProcessor = new DefaultFileProcessor(fileConfig);
 		
-		DBConfig dbConfig = new DefaultDBConfig(10, 10);
+		SqlHolder sqlHolder = new DefaultSqlHolder("insert into Person(no,name,sex,age)values(?,?,?,?)");
+		DBConfig dbConfig = new DefaultDBConfig(10, 10, "jdbc:mysql://localhost:3306/test", "root", "d2p9bupt", sqlHolder);
 		InsertDBProcessor insertDBProcessor = new DefaultInsertDBProcessor(dbConfig);
 		
 		SimpleJobLauncher jobLauncher = new SimpleJobLauncher();

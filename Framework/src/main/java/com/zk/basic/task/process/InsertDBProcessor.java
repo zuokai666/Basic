@@ -1,8 +1,12 @@
 package com.zk.basic.task.process;
 
+import java.util.concurrent.Executor;
+
+import com.zk.basic.id.IdGenerator;
+
 public interface InsertDBProcessor {
 	
-	public void start();
+	public void start(Executor executor, IdGenerator idGenerator);
 	
 	public void handle(String[] values);
 	
