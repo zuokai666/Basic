@@ -85,7 +85,7 @@ public class DefaultInsertDBProcessor implements InsertDBProcessor{
 		if(queue != null){
 			for(int i=0;i<dbConfig.getThreadCount();i++){
 				try {
-					queue.put(EOD_FLAG);
+					queue.put(EOD_FLAG);//期待着所有线程都能收到一个结束标志
 				} catch (InterruptedException e) {
 					log.error("", e);
 				}
