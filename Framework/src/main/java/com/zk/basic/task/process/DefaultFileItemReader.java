@@ -10,14 +10,14 @@ import org.slf4j.LoggerFactory;
 
 import com.zk.basic.task.config.FileConfig;
 
-public class DefaultFileProcessor implements FileProcessor{
+public class DefaultFileItemReader implements FileItemReader{
 	
-	private static final Logger log = LoggerFactory.getLogger(DefaultFileProcessor.class);
+	private static final Logger log = LoggerFactory.getLogger(DefaultFileItemReader.class);
 	
 	private BufferedReader bufferedReader;
 	private FileConfig fileConfig;
 	
-	public DefaultFileProcessor(FileConfig fileConfig) {
+	public DefaultFileItemReader(FileConfig fileConfig) {
 		this.fileConfig = fileConfig;
 	}
 	

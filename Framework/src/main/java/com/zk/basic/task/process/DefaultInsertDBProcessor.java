@@ -18,6 +18,7 @@ import com.zk.basic.id.IdGenerator;
 import com.zk.basic.task.config.DBConfig;
 import com.zk.basic.task.sql.SqlHolder;
 
+@Deprecated
 public class DefaultInsertDBProcessor implements InsertDBProcessor{
 	
 	private static final Logger log = LoggerFactory.getLogger(DefaultInsertDBProcessor.class);

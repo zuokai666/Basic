@@ -2,11 +2,11 @@ package com.zk.basic.task.process;
 
 import java.io.IOException;
 
-public interface FileProcessor {
+import com.zk.basic.task.item.ItemReader;
+
+public interface FileItemReader extends ItemReader<String[]>{
 	
 	void open() throws IOException;
-	
-	String[] read() throws Exception;
 	
 	void close() throws IOException;
 }
