@@ -10,7 +10,7 @@ package com.zk.basic.common;
  */
 public interface Lifecycle {
 	
-	void start();
+	void start() throws Exception;
 	
-    void stop();
+    void stop() throws Exception;
 }

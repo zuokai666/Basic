@@ -7,6 +7,4 @@ public interface SqlHolder {
 	List<String> getPreSql();
 	
 	void addPreSql(String sql);
-	
-	String getSql();
 }

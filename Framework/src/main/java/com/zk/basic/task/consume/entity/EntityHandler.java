@@ -10,5 +10,5 @@ import com.zk.basic.common.Lifecycle;
  */
 public interface EntityHandler extends Lifecycle{
 	
-	void handle(Object entity);
+	void handle(Object entity) throws Exception;
 }

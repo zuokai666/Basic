@@ -1,26 +1,18 @@
 package com.zk.basic.task.bootstrap;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.zk.basic.task.config.FileConfig;
 import com.zk.basic.task.consume.ThreadPoolConsumer;
 import com.zk.basic.task.consume.entity.EntityHandlerFactory;
-import com.zk.basic.task.process.DefaultFileItemReader;
-import com.zk.basic.task.process.FileItemReader;
+import com.zk.basic.task.item.support.DefaultFileItemReader;
+import com.zk.basic.task.item.support.FileItemReader;
 
 public class FileProcessStep extends PartitionStep{
 	
-	@SuppressWarnings("unused")
-	private static final Logger log = LoggerFactory.getLogger(FileProcessStep.class);
-	
 	private FileItemReader fileItemReader;
-	private ThreadPoolConsumer threadPoolConsumer;
 	
 	public FileProcessStep(String name, FileItemReader fileItemReader, int corePoolSize, EntityHandlerFactory entityHandlerFactory) {
-		super(name);
+		super(name, new ThreadPoolConsumer(corePoolSize, entityHandlerFactory));
 		this.fileItemReader = fileItemReader;
-		this.threadPoolConsumer = new ThreadPoolConsumer(corePoolSize, entityHandlerFactory);
 	}
 	
 	public FileProcessStep(String name, FileConfig fileConfig, int corePoolSize, EntityHandlerFactory entityHandlerFactory) {

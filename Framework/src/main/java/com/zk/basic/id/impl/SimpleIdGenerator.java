@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.zk.basic.id.IdGenerator;
+import com.zk.basic.task.config.IdGenerateConfig;
 
 /**
  * 简单的主键生成策略的默认实现，编程简单，效率可能比较低下
@@ -37,6 +38,10 @@ public class SimpleIdGenerator implements IdGenerator{
 		this.machineId = machineId;
 		this.processId = processId;
 		this.cacheContent = this.dataCenterId + this.machineId + this.processId;
+	}
+	
+	public SimpleIdGenerator(IdGenerateConfig idGenerateConfig) {
+		this(idGenerateConfig.getDataCenterId(), idGenerateConfig.getMachineId(), idGenerateConfig.getProcessId());
 	}
 	
 	@Override
