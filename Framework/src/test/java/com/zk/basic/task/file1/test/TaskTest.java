@@ -5,15 +5,15 @@ import com.zk.basic.task.bootstrap.SimpleJobLauncher;
 import com.zk.basic.task.bootstrap.SqlStep;
 import com.zk.basic.task.config.ConnectionConfig;
 import com.zk.basic.task.config.DefaultConnectionConfig;
-import com.zk.basic.task.config.DefaultFileConfig;
-import com.zk.basic.task.config.FileConfig;
+import com.zk.basic.task.config.DefaultFileReaderConfig;
+import com.zk.basic.task.config.FileReaderConfig;
 import com.zk.basic.task.consume.entity.EntityHandler;
 import com.zk.basic.task.consume.entity.support.PrintEntityHandler;
 
 public class TaskTest {
 	
 	public static void main(String[] args) {
-		FileConfig fileConfig = new DefaultFileConfig(false, 0, "UTF-8", "D:\\test.txt", ",");
+		FileReaderConfig fileConfig = new DefaultFileReaderConfig(false, 0, "UTF-8", "D:\\test.txt", ",");
 		ConnectionConfig connectionConfig = new DefaultConnectionConfig(
 				"jdbc:mysql://localhost:3306/test", "root", "d2p9bupt", "test");
 		

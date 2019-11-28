@@ -1,31 +1,17 @@
 package com.zk.basic.task.config;
 
-public class DefaultFileConfig implements FileConfig{
+public class DefaultFileWriterConfig implements FileWriterConfig{
 	
-	private boolean shouldSkip;
-	private int skipRows;
 	private String fileCharset;
 	private String filePath;
 	private String fileSperator;
 	
-	public DefaultFileConfig(boolean shouldSkip, int skipRows, String fileCharset, String filePath, String fileSperator) {
-		this.shouldSkip = shouldSkip;
-		this.skipRows = skipRows;
+	public DefaultFileWriterConfig(String fileCharset, String filePath, String fileSperator) {
 		this.fileCharset = fileCharset;
 		this.filePath = filePath;
 		this.fileSperator = fileSperator;
 	}
 	
-	@Override
-	public boolean shouldSkip() {
-		return shouldSkip;
-	}
-
-	@Override
-	public int getSkipRows() {
-		return skipRows;
-	}
-
 	@Override
 	public String getFileCharset() {
 		return fileCharset;

@@ -9,18 +9,6 @@ package com.zk.basic.task.config;
 public interface FileConfig {
 	
 	/**
-	 * 是否应该跳过行，例如标题等等
-	 * @return
-	 */
-	boolean shouldSkip();
-	
-	/**
-	 * 应该跳过多少行
-	 * @return
-	 */
-	int getSkipRows();
-	
-	/**
 	 * 文件字符编码
 	 * @return
 	 */

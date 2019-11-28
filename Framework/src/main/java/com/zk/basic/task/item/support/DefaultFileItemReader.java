@@ -8,16 +8,16 @@ import java.io.InputStreamReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.zk.basic.task.config.FileConfig;
+import com.zk.basic.task.config.FileReaderConfig;
 
 public class DefaultFileItemReader implements FileItemReader{
 	
 	private static final Logger log = LoggerFactory.getLogger(DefaultFileItemReader.class);
 	
 	private BufferedReader bufferedReader;
-	private FileConfig fileConfig;
+	private FileReaderConfig fileConfig;
 	
-	public DefaultFileItemReader(FileConfig fileConfig) {
+	public DefaultFileItemReader(FileReaderConfig fileConfig) {
 		this.fileConfig = fileConfig;
 	}
 	

@@ -1,11 +1,16 @@
 package com.zk.basic.task.bootstrap;
 
-import com.zk.basic.task.config.FileConfig;
+import com.zk.basic.task.config.FileReaderConfig;
 import com.zk.basic.task.consume.ThreadPoolConsumer;
 import com.zk.basic.task.consume.entity.EntityHandlerFactory;
 import com.zk.basic.task.item.support.DefaultFileItemReader;
 import com.zk.basic.task.item.support.FileItemReader;
 
+/**
+ * 文件数据导入数据库_步骤
+ * @author King
+ *
+ */
 public class FileProcessStep extends PartitionStep{
 	
 	private FileItemReader fileItemReader;
@@ -15,7 +20,7 @@ public class FileProcessStep extends PartitionStep{
 		this.fileItemReader = fileItemReader;
 	}
 	
-	public FileProcessStep(String name, FileConfig fileConfig, int corePoolSize, EntityHandlerFactory entityHandlerFactory) {
+	public FileProcessStep(String name, FileReaderConfig fileConfig, int corePoolSize, EntityHandlerFactory entityHandlerFactory) {
 		this(name, new DefaultFileItemReader(fileConfig), corePoolSize, entityHandlerFactory);
 	}
 	
