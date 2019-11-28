@@ -5,11 +5,13 @@ public class DefaultConnectionConfig implements ConnectionConfig{
 	private String url;
 	private String user;
     private String password;
+    private String dataBase;
 	
-    public DefaultConnectionConfig(String url, String user, String password) {
+    public DefaultConnectionConfig(String url, String user, String password, String dataBase) {
 		this.url = url;
 		this.user = user;
 		this.password = password;
+		this.dataBase = dataBase;
 	}
     
 	@Override
@@ -25,5 +27,10 @@ public class DefaultConnectionConfig implements ConnectionConfig{
 	@Override
 	public String getPassword() {
 		return password;
+	}
+
+	@Override
+	public String getDataBase() {
+		return dataBase;
 	}	
 }

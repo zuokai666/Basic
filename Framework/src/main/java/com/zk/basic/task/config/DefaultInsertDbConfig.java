@@ -2,46 +2,30 @@ package com.zk.basic.task.config;
 
 import com.zk.basic.id.impl.DefaultIdGeneratorProperties;
 
-public class DefaultInsertDbConfig implements InsertDbConfig{
+public class DefaultInsertDbConfig extends DefaultConnectionConfig implements InsertDbConfig{
 	
 	private int commitCount;
-	
-	private String url;
-	private String user;
-    private String password;
+	private int threadCount;
     
     private String dataCenterId = DefaultIdGeneratorProperties.dataCenterId;
 	private String machineId = DefaultIdGeneratorProperties.machineId;
 	private String processId = DefaultIdGeneratorProperties.processId;
 	
 	private String sql;
+	private String tableName;
 	
-	public DefaultInsertDbConfig(int commitCount, String url, String user, String password, String sql) {
+	public DefaultInsertDbConfig(int threadCount, int commitCount, 
+			String url, String user, String password, String sql, String dataBase, String tableName) {
+		super(url, user, password, dataBase);
+		this.threadCount = threadCount;
 		this.commitCount = commitCount;
-		this.url = url;
-		this.user = user;
-		this.password = password;
 		this.sql = sql;
+		this.tableName = tableName;
 	}
 	
 	@Override
 	public int getCommitCount() {
 		return commitCount;
-	}
-
-	@Override
-	public String getUrl() {
-		return url;
-	}
-
-	@Override
-	public String getUser() {
-		return user;
-	}
-
-	@Override
-	public String getPassword() {
-		return password;
 	}
 
 	@Override
@@ -62,5 +46,15 @@ public class DefaultInsertDbConfig implements InsertDbConfig{
 	@Override
 	public String getPreparedSql() {
 		return sql;
+	}
+
+	@Override
+	public int getThreadCount() {
+		return threadCount;
+	}
+
+	@Override
+	public String getTableName() {
+		return tableName;
 	}
 }

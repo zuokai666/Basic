@@ -6,8 +6,8 @@ import java.util.Date;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.zk.basic.id.IdGenerateConfig;
 import com.zk.basic.id.IdGenerator;
-import com.zk.basic.task.config.IdGenerateConfig;
 
 /**
  * 简单的主键生成策略的默认实现，编程简单，效率可能比较低下

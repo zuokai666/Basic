@@ -1,4 +1,4 @@
-package com.zk.basic.task.config;
+package com.zk.basic.id;
 
 public interface IdGenerateConfig {
 	
@@ -7,4 +7,6 @@ public interface IdGenerateConfig {
 	String getMachineId();
 	
 	String getProcessId();
+	
+	String getTableName();
 }

@@ -14,7 +14,8 @@ public class TaskTest {
 	
 	public static void main(String[] args) {
 		FileConfig fileConfig = new DefaultFileConfig(false, 0, "UTF-8", "D:\\test.txt", ",");
-		ConnectionConfig connectionConfig = new DefaultConnectionConfig("jdbc:mysql://localhost:3306/test", "root", "d2p9bupt");
+		ConnectionConfig connectionConfig = new DefaultConnectionConfig(
+				"jdbc:mysql://localhost:3306/test", "root", "d2p9bupt", "test");
 		
 		SimpleJobLauncher jobLauncher = new SimpleJobLauncher();
 		jobLauncher.addStep(new SqlStep("人员信息导入预执行sql", connectionConfig, "truncate table Person"));
