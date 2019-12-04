@@ -11,6 +11,13 @@ import javax.sql.DataSource;
 
 import com.zk.basic.lamborghini.pool.LamborghiniPool;
 
+/**
+ * 对外公开的兰博基尼数据库连接池，重写了获取的连接的关闭方法，使得不使用的时候放回连接池，做到复用。
+ * 
+ * @author king
+ * @date 2019-12-04 20:13:37
+ *
+ */
 public class LamborghiniDataSource implements DataSource, AutoCloseable{
 	
 	private final AtomicBoolean shutdown = new AtomicBoolean(false);
@@ -37,7 +44,7 @@ public class LamborghiniDataSource implements DataSource, AutoCloseable{
 	
 	@Override
 	public Connection getConnection(String username, String password) throws SQLException {
-		return getConnection();
+		throw new SQLFeatureNotSupportedException();
 	}
 	
 	protected boolean isClosed() {

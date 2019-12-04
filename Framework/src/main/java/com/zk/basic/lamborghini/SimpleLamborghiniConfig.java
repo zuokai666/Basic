@@ -9,7 +9,6 @@ public class SimpleLamborghiniConfig implements LamborghiniConfig{
 	private int minIdle;
 	private int maxPoolSize;
 	private int connectionTimeout;
-	private String poolName;
 	
 	public void setUrl(String url) {
 		this.url = url;
@@ -32,10 +31,6 @@ public class SimpleLamborghiniConfig implements LamborghiniConfig{
 	public void setConnectionTimeout(int connectionTimeout) {
 		this.connectionTimeout = connectionTimeout;
 	}
-	public void setPoolName(String poolName) {
-		this.poolName = poolName;
-	}
-	
 	@Override
 	public String getUrl() {
 		return url;
@@ -69,9 +64,5 @@ public class SimpleLamborghiniConfig implements LamborghiniConfig{
 	@Override
 	public int getConnectionTimeout() {
 		return connectionTimeout;
-	}
-	@Override
-	public String getPoolName() {
-		return poolName;
 	}
 }

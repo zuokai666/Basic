@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
 import javax.sql.DataSource;
@@ -26,61 +27,74 @@ import com.zk.basic.lamborghini.util.DriverDataSource;
  */
 public class LamborghiniPool implements AutoCloseable{
 	
-	public static final long housekeeper_period_ms = 10 * 1000;
+	private static final long housekeeper_period_ms = 10 * 1000;
+	private static final int permits = 10000;
 	
 	private ConcurrentBag<ConnectionBean> connectionBag;
 	protected LamborghiniConfig config;
-	protected String poolName;
+	protected String poolName = "LamborghiniPool";
 	protected DataSource dataSource;
 	private ScheduledExecutorService houseKeepingExecutorService;
+	private Semaphore semaphore = new Semaphore(permits);
 	
 	public LamborghiniPool(LamborghiniConfig config) {
 		this.connectionBag = new ConcurrentBag<>();
 		this.config = config;
-		this.poolName = config.getPoolName();
 		this.dataSource = initializeDataSource();
 		this.houseKeepingExecutorService = initializeScheduledExecutorService();
 		initializeScheduledExecutorServiceTask();
 	}
 	
-	protected DataSource initializeDataSource() {
+	private DataSource initializeDataSource() {
 		return new DriverDataSource(config.getUrl(), config.getDriverClassName(), 
 				config.getUser(), config.getPassword());
 	}
 	
-	protected ScheduledExecutorService initializeScheduledExecutorService() {
+	private ScheduledExecutorService initializeScheduledExecutorService() {
 		return new ScheduledThreadPoolExecutor(
 				1, new SimpleThreadFactory(poolName + " houseKeeper", true), new DiscardPolicy());
 	}
 	
-	protected void initializeScheduledExecutorServiceTask() {
+	private void initializeScheduledExecutorServiceTask() {
 		this.houseKeepingExecutorService.scheduleWithFixedDelay(
 				new HouseKeeper(), 100L, housekeeper_period_ms, TimeUnit.MILLISECONDS);
 	}
 	
+	/**
+	 * 对外公开最内部的DataSource，以便获取基本属性与方法
+	 * @return
+	 */
 	public DataSource getDataSource() {
 		return dataSource;
 	}
 	
+	/**
+	 * 回收对象
+	 * @param bean
+	 */
 	public void recycle(ConnectionBean bean){
 		connectionBag.requite(bean);
 	}
 	
 	public Connection getConnection() throws SQLException {
 		try {
+			semaphore.acquire();
 			return connectionBag.borrow(config.getConnectionTimeout(), TimeUnit.SECONDS);
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
 			throw new SQLException(e);
+		} finally {
+			semaphore.release();
 		}
 	}
 	
-	protected Connection newConnection() throws SQLException{
-		return dataSource.getConnection();
-	}
-	
+	/**
+	 * 新建连接对象
+	 * @return
+	 * @throws SQLException
+	 */
 	protected ConnectionBean newConnectionBean() throws SQLException{
-		return new ConnectionBean(newConnection(), this);
+		return new ConnectionBean(getDataSource().getConnection(), this);
 	}
 	
 	@Override
@@ -93,27 +107,35 @@ public class LamborghiniPool implements AutoCloseable{
 		poolName = null;
 	}
 	
-	public int getTotalConnections(){
+	private int getTotalConnections(){
 		return connectionBag.size();
 	}
-	public int getIdleConnections(){
+	private int getIdleConnections(){
 		return connectionBag.getCountBy(BagBean.STATE_NOT_IN_USE);
 	}
 	
-	public boolean shouldCreateAnotherConnection(){
+	private boolean shouldCreateAnotherConnection(){
 		return getTotalConnections() < config.getMaxPoolSize() && 
 				(connectionBag.getWaitingThreadCount() > 0 || getIdleConnections() < config.getMinIdle());
 	}
 	
-	public class HouseKeeper implements Runnable{
+	private boolean shouldRemoveAnotherConnection(){
+		return getTotalConnections() < config.getMaxPoolSize() && 
+				getIdleConnections() > config.getMinIdle();
+	}
+	
+	private class HouseKeeper implements Runnable{
 		
 		private final Logger log = LoggerFactory.getLogger(HouseKeeper.class);
 		
 		@Override
 		public void run() {
 			try {
-				if(shouldCreateAnotherConnection()){
+				while(shouldCreateAnotherConnection()){
 					connectionBag.add(newConnectionBean());
+				}
+				while(shouldRemoveAnotherConnection()){
+					connectionBag.randomRemove();
 				}
 				int total = getTotalConnections();
 				int idle = getIdleConnections();

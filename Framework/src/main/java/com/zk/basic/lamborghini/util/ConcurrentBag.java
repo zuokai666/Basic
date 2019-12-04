@@ -44,6 +44,10 @@ public class ConcurrentBag<T extends BagBean> implements AutoCloseable {
 		}
 	}
 	
+	/**
+	 * 将对象归还
+	 * @param bagEntry
+	 */
 	public void requite(T bagEntry){
 		bagEntry.setState(STATE_NOT_IN_USE);
 		if(0 < waiters.get()){//表明有线程在等待
@@ -71,6 +75,22 @@ public class ConcurrentBag<T extends BagBean> implements AutoCloseable {
 		}
 	}
 	
+	/**
+	 * 随机删除一个空闲的对象
+	 */
+	public void randomRemove(){
+		for(T bagEntry : sharedList){
+			if(bagEntry.compareAndSet(STATE_NOT_IN_USE, STATE_REMOVED)){
+				sharedList.remove(bagEntry);
+				break;
+			}
+		}
+	}
+	
+	/**
+	 * 不管对象是否正在使用，直接删除
+	 * @param bagEntry
+	 */
 	public void remove(T bagEntry){
 		if(bagEntry.compareAndSet(STATE_NOT_IN_USE, STATE_REMOVED) || 
 				bagEntry.compareAndSet(STATE_IN_USE, STATE_REMOVED)){
