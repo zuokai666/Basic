@@ -22,4 +22,12 @@ ConcurrentBag
 当获取连接超时，如何返回呢？可以看看HikariCP的处理。
 
 
+Semaphore信号量
+
+
+
+
+
+
+
 
