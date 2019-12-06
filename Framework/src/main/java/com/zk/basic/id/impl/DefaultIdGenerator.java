@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.zk.basic.id.IdGenerator;
+import static com.zk.basic.id.IdGenerateConfig.*;
 
 /**
  * 主键生成策略的默认实现：synchronized + CAS
@@ -15,6 +16,7 @@ import com.zk.basic.id.IdGenerator;
  * @author King
  * 
  */
+@Deprecated
 public class DefaultIdGenerator implements IdGenerator{
 	
 	private static final Logger log = LoggerFactory.getLogger(DefaultIdGenerator.class);

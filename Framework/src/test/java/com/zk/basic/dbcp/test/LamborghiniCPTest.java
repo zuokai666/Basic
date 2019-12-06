@@ -4,38 +4,32 @@ import java.sql.Connection;
 import java.util.Random;
 import java.util.concurrent.locks.LockSupport;
 
+import javax.sql.DataSource;
+
 import org.slf4j.LoggerFactory;
 
-import com.zk.basic.lamborghini.LamborghiniDataSource;
-import com.zk.basic.lamborghini.SimpleLamborghiniConfig;
+import com.zk.basic.beans.factory.Summer;
+import com.zk.basic.test.Configuration;
 
 public class LamborghiniCPTest {
 	
 	private static final org.slf4j.Logger log = LoggerFactory.getLogger(LamborghiniCPTest.class);
 	
 	public static void main(String[] args) {
-		SimpleLamborghiniConfig lamborghiniConfig = new SimpleLamborghiniConfig();
-		lamborghiniConfig.setConnectionTimeout(20);
-		lamborghiniConfig.setMaxPoolSize(1);
-		lamborghiniConfig.setMinIdle(1);
-		lamborghiniConfig.setUrl("jdbc:mysql://localhost:3306/test");
-		lamborghiniConfig.setDriverClassName("com.mysql.jdbc.Driver");
-		lamborghiniConfig.setUser("root");
-		lamborghiniConfig.setPassword("d2p9bupt");
-		
-		LamborghiniDataSource dataSource = new LamborghiniDataSource(lamborghiniConfig);
-		new Thread(() -> run1(dataSource)).start();
-		new Thread(() -> run1(dataSource)).start();
+		new Configuration().init();
+		DataSource dataSource = Summer.rain().getBean(DataSource.class);
+		new Thread(() -> run(dataSource)).start();
+		new Thread(() -> run(dataSource)).start();
 		LockSupport.park();
 	}
 	
-	public static void whileRun(LamborghiniDataSource dataSource){
+	public static void whileRun(DataSource dataSource){
 		while(true){
 			run(dataSource);
 		}
 	}
 	
-	public static void run(LamborghiniDataSource dataSource){
+	public static void run(DataSource dataSource){
 		try {
 			Connection connection = dataSource.getConnection();
 			log.debug("开始使用{}", connection.toString());
@@ -48,7 +42,7 @@ public class LamborghiniCPTest {
 		}
 	}
 	
-	public static void run1(LamborghiniDataSource dataSource){
+	public static void run1(DataSource dataSource){
 		try {
 			log.debug("开始获取");
 			Connection connection = dataSource.getConnection();

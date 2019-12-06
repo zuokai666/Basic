@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 
 import com.zk.basic.task.consume.entity.EntityHandler;
 import com.zk.basic.task.consume.entity.EntityHandlerFactory;
-import com.zk.basic.util.annotation.ThreadSafe;
 
 /**
  * 多线程消费者
@@ -49,7 +48,6 @@ public class ThreadPoolConsumer implements ConsumerService{
 	}
 	
 	//幂等操作
-	@ThreadSafe
 	@Override
 	public void shutdown() {
 		for(;;){

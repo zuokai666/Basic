@@ -8,12 +8,13 @@ import org.slf4j.LoggerFactory;
 
 import com.zk.basic.id.IdGenerateConfig;
 import com.zk.basic.id.IdGenerator;
+import static com.zk.basic.id.IdGenerateConfig.*;
 
 /**
- * 简单的主键生成策略的默认实现，编程简单，效率可能比较低下
+ * 简单的主键生成策略的默认实现，编程简单，效率有待观察
  * 
  * @author King
- *
+ * 
  */
 public class SimpleIdGenerator implements IdGenerator{
 	
@@ -24,6 +25,8 @@ public class SimpleIdGenerator implements IdGenerator{
 	private String processId;
 	private String cacheContent;
 	
+	//线程不安全，由于get()已使用锁，所以全局声明
+	private SimpleDateFormat sdf = new SimpleDateFormat(TIME_PATTERN);
 	private int serialNum = SERIAL_MIN;
 	private long lastTimeMillis = System.currentTimeMillis();//初始化
 	
@@ -50,19 +53,17 @@ public class SimpleIdGenerator implements IdGenerator{
 		if(lastTimeMillis != timeNum){//毫秒不相同，重置时间与序列号
 			serialNum = SERIAL_MIN;
 			lastTimeMillis = timeNum;
-		}else if(SERIAL_MAX < serialNum){//毫秒相同，序列号越界
+		}else if(SERIAL_MAX < serialNum){//毫秒相同，序列号越界，加以自旋，等待该毫秒通过
 			do {
 				timeNum = System.currentTimeMillis();
-				log.info("spin");
+				log.debug("id wait generate spin.");
 			} while (lastTimeMillis == timeNum);//自旋
 			serialNum = SERIAL_MIN;
 			lastTimeMillis = timeNum;
 		}
 		
-		int seq = serialNum;
-		serialNum++;
-		String timeSeq = new SimpleDateFormat(TIME_PATTERN).format(new Date(timeNum));
-		String serialSeq = seq + "";
+		String timeSeq = sdf.format(new Date(timeNum));
+		String serialSeq = (serialNum++) + "";
 		
 		StringBuilder sb = new StringBuilder(TOTAL_LENGTH);
 		sb.append(timeSeq);

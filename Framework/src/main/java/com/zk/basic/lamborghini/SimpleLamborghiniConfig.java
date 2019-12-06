@@ -8,6 +8,10 @@ public class SimpleLamborghiniConfig implements LamborghiniConfig{
 	private String password;
 	private int minIdle;
 	private int maxPoolSize;
+	
+	/**
+	 * 秒（单位）
+	 */
 	private int connectionTimeout;
 	
 	public void setUrl(String url) {

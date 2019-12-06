@@ -2,6 +2,7 @@ package com.zk.basic.lamborghini.pool;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.SQLTransientConnectionException;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.Semaphore;
@@ -79,7 +80,11 @@ public class LamborghiniPool implements AutoCloseable{
 	public Connection getConnection() throws SQLException {
 		try {
 			semaphore.acquire();
-			return connectionBag.borrow(config.getConnectionTimeout(), TimeUnit.SECONDS);
+			ConnectionBean borrow = connectionBag.borrow(config.getConnectionTimeout(), TimeUnit.SECONDS);
+			if(borrow == null){
+				throw new SQLTransientConnectionException("Connection is not available.");//2019年12月6日14:48:01 增加了抛出 异常逻辑
+			}
+			return borrow;
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
 			throw new SQLException(e);
@@ -119,7 +124,16 @@ public class LamborghiniPool implements AutoCloseable{
 				(connectionBag.getWaitingThreadCount() > 0 || getIdleConnections() < config.getMinIdle());
 	}
 	
+	/**
+	 * 应该删除连接的条件判断：只有空闲连接超过最小空闲连接数就删除连接
+	 * @return
+	 */
 	private boolean shouldRemoveAnotherConnection(){
+		return getIdleConnections() > config.getMinIdle();
+	}
+	
+	@Deprecated
+	public boolean shouldRemoveAnotherConnectionV1(){
 		return getTotalConnections() < config.getMaxPoolSize() && 
 				getIdleConnections() > config.getMinIdle();
 	}
