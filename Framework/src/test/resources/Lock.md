@@ -22,8 +22,34 @@ JDK 1.6 引入自适应自旋锁
 
 
 
+可重入锁：
+void lock();
+如果锁还没有被另一个线程获取，那就获取锁并且立即返回，设置这个锁的计数从0到1。
+如果当前线程已经获取锁，计数+1，并且立即返回。
+如果锁被其它线程持有，当前线程进行阻塞，LockSupport.park()，线程进入Waiting状态。
 
 
+
+
+
+Semaphore信号量
+类结构关系：
+java.util.concurrent.Semaphore与AbstractQueuedSynchronizer基于组合合作
+意图权限控制，限制获取某种资源的线程数量。
+
+
+java.util.concurrent.locks.AbstractQueuedSynchronizer
+Node head;等待队列的头
+Node tail;等待队列的尾
+int state;同步状态
+Node：双向链表
+
+
+所谓的排他，共享的区别？
+
+
+所谓的公平，不公平的区别？
+在获取许可前，先看看有没有人线程在自己之前排队
 
 
 
