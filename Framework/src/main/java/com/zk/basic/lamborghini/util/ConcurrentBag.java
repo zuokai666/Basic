@@ -4,6 +4,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.LockSupport;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,13 +51,23 @@ public class ConcurrentBag<T extends BagBean> implements AutoCloseable {
 	 */
 	public void requite(T bagEntry){
 		bagEntry.setState(STATE_NOT_IN_USE);
-		if(0 < waiters.get()){//表明有线程在等待
-			if(bagEntry.getState() == STATE_NOT_IN_USE){
-				try {
-					handoffQueue.put(bagEntry);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+//		if(0 < waiters.get()){//表明有线程在等待
+//			if(bagEntry.getState() == STATE_NOT_IN_USE){
+//				try {
+//					handoffQueue.put(bagEntry);
+//				} catch (InterruptedException e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		}
+		//2019年12月9日14:34:25 左凯 改动 上述方法有情况下会阻塞
+		for(int i=0;0 < waiters.get();i++){
+			if(bagEntry.getState() != STATE_NOT_IN_USE || handoffQueue.offer(bagEntry)){//成功的两种情况
+				return;
+			}else if((i & 0xff) == 0xff){// i>255
+				LockSupport.parkNanos(TimeUnit.MICROSECONDS.toNanos(10));
+			}else {// i<=255
+				Thread.yield();//当前线程让出执行时间
 			}
 		}
 	}
@@ -66,12 +77,16 @@ public class ConcurrentBag<T extends BagBean> implements AutoCloseable {
 			throw new IllegalStateException("ConcurrentBag is close.");
 		}
 		sharedList.add(bagEntry);
-		if(0 < waiters.get()){//表明有线程在等待
-			try {
-				handoffQueue.put(bagEntry);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+//		if(0 < waiters.get()){//表明有线程在等待
+//			try {
+//				handoffQueue.put(bagEntry);
+//			} catch (InterruptedException e) {
+//				e.printStackTrace();
+//			}
+//		}
+		//2019年12月9日14:34:25 左凯 改动 上述方法有情况下会阻塞
+		while((0 < waiters.get()) && (!handoffQueue.offer(bagEntry))){
+			Thread.yield();//当前线程让出执行时间
 		}
 	}
 	
