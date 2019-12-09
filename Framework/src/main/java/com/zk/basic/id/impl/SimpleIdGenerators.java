@@ -29,6 +29,11 @@ public class SimpleIdGenerators implements IdGenerators{
 	
 	@Override
 	public String generateId(String tableName) {
+		return getIdGenerator(tableName).generateId();
+	}
+	
+	@Override
+	public IdGenerator getIdGenerator(String tableName) {
 		IdGenerator idGenerator = map.get(tableName);
 		if(idGenerator == null){
 			IdGenerator newIdGenerator = new SimpleIdGenerator(idGenerateConfig);
@@ -37,6 +42,6 @@ public class SimpleIdGenerators implements IdGenerators{
 				idGenerator = newIdGenerator;
 			}
 		}
-		return idGenerator.generateId();
+		return idGenerator;
 	}
 }

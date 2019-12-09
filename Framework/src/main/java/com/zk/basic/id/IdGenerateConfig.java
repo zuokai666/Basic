@@ -24,7 +24,7 @@ public interface IdGenerateConfig {
 	 * 进程长度，每台服务器最多10个进程
 	 */
 	int PROCESS_LENGTH = 1;
-	String processId = "1-";
+	String processId = "1";
 	
 	/**
 	 * 自增序列长度，每个进程每毫秒最多10000个序列

@@ -34,6 +34,10 @@ public class LamborghiniDataSource implements DataSource, AutoCloseable{
 		}
 	}
 	
+	/**
+	 * 因为复用连接，需要考虑有状态的对象问题，目前没有特殊处理。2019年12月9日11:45:28 左凯
+	 * 为了避免频繁改动，需要加入观察者模式来满足开闭原则。
+	 */
 	@Override
 	public Connection getConnection() throws SQLException {
 		if(isClosed()){

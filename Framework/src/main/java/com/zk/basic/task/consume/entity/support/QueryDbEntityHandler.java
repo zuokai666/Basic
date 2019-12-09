@@ -2,12 +2,14 @@ package com.zk.basic.task.consume.entity.support;
 
 import java.io.File;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.Statement;
+
+import javax.sql.DataSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.zk.basic.beans.factory.Summer;
 import com.zk.basic.task.config.FileWriterConfig;
 import com.zk.basic.task.config.QueryDbConfig;
 import com.zk.basic.task.consume.entity.EntityHandler;
@@ -34,22 +36,19 @@ public abstract class QueryDbEntityHandler implements EntityHandler{
 	public void start() throws Exception {
 		fileItemWriter = new DefaultFileItemWriter(fileWriterConfig);
 		fileItemWriter.open();
-		connection = DriverManager.getConnection(
-				queryDbConfig.getUrl(), 
-				queryDbConfig.getUser(), 
-				queryDbConfig.getPassword());
+		connection = Summer.rain().getBean(DataSource.class).getConnection();
 		statement = connection.createStatement();
 	}
 	
 	@Override
 	public void handle(Object entity) throws Exception {
 		String key = (String) entity;
-		String result = doQuery(key);
+		String result = doQuery(key, fileWriterConfig.getFileSperator());
 		fileItemWriter.write(result);
 		count++;
 	}
 	
-	protected abstract String doQuery(String key) throws Exception;
+	protected abstract String doQuery(String key, String fileSperator) throws Exception;
 	
 	@Override
 	public void stop() throws Exception {

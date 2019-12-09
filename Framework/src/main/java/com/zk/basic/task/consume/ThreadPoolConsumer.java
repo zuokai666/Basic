@@ -111,10 +111,14 @@ public class ThreadPoolConsumer implements ConsumerService{
 				while((entity = workQueue.take()) != endFlag){
 					entityHandler.handle(entity);
 				}
-				entityHandler.stop();
 			} catch (Throwable t) {
 				log.error("", t);
 			} finally {
+				try {
+					entityHandler.stop();//必须执行 2019年12月9日13:01:30 左凯 改动
+				} catch (Exception e) {
+					log.error("", e);
+				}
 				countDownLatch.countDown();
 			}
 		}

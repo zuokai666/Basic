@@ -1,12 +1,12 @@
 package com.zk.basic.task.config;
 
-import com.zk.basic.id.IdGenerateConfig;
-
-public interface InsertDbConfig extends ConnectionConfig, IdGenerateConfig{
+public interface InsertDbConfig {
 	
 	int getCommitCount();
 	
 	int getThreadCount();
 	
 	String getPreparedSql();
+	
+	String getTable();
 }

@@ -1,6 +1,6 @@
 package com.zk.basic.task.config;
 
-public interface QueryDbConfig extends ConnectionConfig{
+public interface QueryDbConfig {
 	
 	int getGridSize();
 	

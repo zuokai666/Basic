@@ -1,16 +1,13 @@
 package com.zk.basic.task.config;
 
-public class DefaultQueryDbConfig extends DefaultConnectionConfig implements QueryDbConfig{
+public class DefaultQueryDbConfig implements QueryDbConfig{
 	
 	private int gridSize;
 	private int threadCount;
 	private String executeSql;
 	private String primaryKeyName;
 	
-	public DefaultQueryDbConfig(int threadCount, 
-			String url, String user, String password, String dataBase, 
-			String executeSql, String primaryKeyName) {
-		super(url, user, password, dataBase);
+	public DefaultQueryDbConfig(int threadCount, String executeSql, String primaryKeyName) {
 		this.gridSize = threadCount;
 		this.threadCount = threadCount;
 		this.executeSql = executeSql;
