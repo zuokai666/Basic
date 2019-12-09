@@ -10,6 +10,7 @@ import com.zk.basic.id.impl.SimpleIdGenerators;
 import com.zk.basic.lamborghini.LamborghiniConfig;
 import com.zk.basic.lamborghini.LamborghiniDataSource;
 import com.zk.basic.lamborghini.SimpleLamborghiniConfig;
+import com.zk.basic.lamborghini.listener.support.ConnectionResetListener;
 
 public class Configuration {
 	
@@ -33,6 +34,7 @@ public class Configuration {
 	
 	public DataSource dataSource(){
 		LamborghiniDataSource dataSource = new LamborghiniDataSource(lamborghiniConfig());
+		dataSource.addListener(new ConnectionResetListener());//加入重置属性监听器，满足开闭原则
 		return dataSource;
 	}
 	

@@ -32,6 +32,9 @@ public class SimpleIdGenerators implements IdGenerators{
 		return getIdGenerator(tableName).generateId();
 	}
 	
+	/**
+	 * 该方法为线程安全，使用ConcurrentHashMap来保证。
+	 */
 	@Override
 	public IdGenerator getIdGenerator(String tableName) {
 		IdGenerator idGenerator = map.get(tableName);

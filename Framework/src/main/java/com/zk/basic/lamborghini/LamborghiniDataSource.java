@@ -4,11 +4,15 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
 
 import javax.sql.DataSource;
 
+import com.zk.basic.lamborghini.listener.LamborghiniConnectionEvent;
+import com.zk.basic.lamborghini.listener.LamborghiniEvent;
+import com.zk.basic.lamborghini.listener.LamborghiniListener;
 import com.zk.basic.lamborghini.pool.LamborghiniPool;
 
 /**
@@ -20,6 +24,7 @@ import com.zk.basic.lamborghini.pool.LamborghiniPool;
  */
 public class LamborghiniDataSource implements DataSource, AutoCloseable{
 	
+	private CopyOnWriteArrayList<LamborghiniListener<LamborghiniEvent>> listeners = new CopyOnWriteArrayList<>();
 	private final AtomicBoolean shutdown = new AtomicBoolean(false);
 	private final LamborghiniPool pool;
 	
@@ -43,7 +48,20 @@ public class LamborghiniDataSource implements DataSource, AutoCloseable{
 		if(isClosed()){
 			throw new SQLException("LamborghiniDataSource has been closed.");
 		}
-		return pool.getConnection();
+		Connection connection = pool.getConnection();
+		for(LamborghiniListener<LamborghiniEvent> listener : listeners){//加入观察者模式
+			listener.onLamborghiniEvent(new LamborghiniConnectionEvent(connection));
+		}
+		return connection;
+	}
+	
+	/**
+	 * 添加监听器
+	 * 
+	 * @param listener
+	 */
+	public void addListener(LamborghiniListener<LamborghiniEvent> listener){
+		listeners.add(listener);
 	}
 	
 	@Override
