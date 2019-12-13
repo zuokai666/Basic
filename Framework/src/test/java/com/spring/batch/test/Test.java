@@ -2,9 +2,10 @@ package com.spring.batch.test;
 
 import java.util.List;
 
+import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.job.SimpleJob;
+import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.repository.support.MapJobRepositoryFactoryBean;
 import org.springframework.batch.core.step.builder.StepBuilder;
@@ -31,8 +32,9 @@ public class Test {
 					public InputModel read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
 						if(i>0){
 							System.err.println(Thread.currentThread().getName()+"read"+i);
+							InputModel inputModel = new InputModel(i);
 							i--;
-							return new InputModel();
+							return inputModel;
 						}else {
 							return null;
 						}
@@ -54,9 +56,8 @@ public class Test {
 					}
 				})
 				.build();
-		SimpleJob simpleJob = new SimpleJob("job");
-		simpleJob.setJobRepository(repository);
-		simpleJob.addStep(step);
-		simpleJob.execute(repository.createJobExecution("job", new JobParameters()));
+		
+		Job job = new JobBuilder("job").repository(repository).start(step).build();
+		job.execute(repository.createJobExecution("job", new JobParameters()));
 	}
 }
