@@ -7,7 +7,6 @@ package com.zk.batch.model;
  */
 public class PersonItem {
 	
-	private String serial;
 	private String name;
 	private String sex;
 	private String age;
@@ -17,12 +16,6 @@ public class PersonItem {
 	}
 	public String getAge() {
 		return age;
-	}
-	public String getSerial() {
-		return serial;
-	}
-	public void setSerial(String serial) {
-		this.serial = serial;
 	}
 	public String getName() {
 		return name;
@@ -35,5 +28,9 @@ public class PersonItem {
 	}
 	public void setSex(String sex) {
 		this.sex = sex;
+	}
+	@Override
+	public String toString() {
+		return "PersonItem [name=" + name + ", sex=" + sex + ", age=" + age + "]";
 	}
 }

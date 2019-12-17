@@ -1,7 +1,5 @@
 package com.zk.batch.test;
 
-import java.util.List;
-
 import javax.sql.DataSource;
 
 import org.springframework.batch.core.Job;
@@ -12,17 +10,13 @@ import org.springframework.batch.core.launch.support.SimpleJobLauncher;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.repository.support.MapJobRepositoryFactoryBean;
 import org.springframework.batch.core.step.builder.StepBuilder;
-import org.springframework.batch.item.ItemProcessor;
-import org.springframework.batch.item.ItemReader;
-import org.springframework.batch.item.ItemWriter;
-import org.springframework.batch.item.NonTransientResourceException;
-import org.springframework.batch.item.ParseException;
-import org.springframework.batch.item.UnexpectedInputException;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.support.transaction.ResourcelessTransactionManager;
+import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.task.SimpleAsyncTaskExecutor;
+import org.springframework.core.task.SyncTaskExecutor;
+import org.springframework.core.task.TaskExecutor;
 
-import com.spring.batch.test.InputModel;
-import com.spring.batch.test.OutputModel;
 import com.zk.basic.beans.factory.Summer;
 import com.zk.basic.id.IdGenerateConfig;
 import com.zk.basic.id.IdGenerators;
@@ -34,43 +28,62 @@ import com.zk.basic.lamborghini.SimpleLamborghiniConfig;
 import com.zk.basic.lamborghini.listener.support.ConnectionResetListener;
 import com.zk.batch.model.PersonEntity;
 import com.zk.batch.model.PersonItem;
+import com.zk.batch.model.PersonItemProcessor;
+import com.zk.batch.model.PersonItemWriter;
+import com.zk.batch.model.PersonLineMapper;
 
 public class Configuration {
+	
+	public static int chunkSize = 10;
+	public static String dataSeparator = ",";
 	
 	public void init(){
 		Summer.rain().registerSingleton(LamborghiniConfig.class, lamborghiniConfig());
 		Summer.rain().registerSingleton(DataSource.class, dataSource());
 		Summer.rain().registerSingleton(IdGenerators.class, idGenerators());
+		
+		Summer.rain().registerSingleton(JobRepository.class, jobRepository());//先初始化JobRepository，后续有调用
+		
 		Summer.rain().registerSingleton(JobLauncher.class, jobLauncher());
 		Summer.rain().registerSingleton(Job.class, job());
 	}
 	
 	public JobLauncher jobLauncher(){
-		return new SimpleJobLauncher();
-	}
-	
-	public ItemReader<PersonItem> itemReader(){
-		ItemReader<PersonItem> itemReader = new FlatFileItemReader<PersonItem>();
-		return itemReader;
+		JobRepository jobRepository = Summer.rain().getBean(JobRepository.class);
+		SimpleJobLauncher simpleJobLauncher = new SimpleJobLauncher();
+		simpleJobLauncher.setJobRepository(jobRepository);
+		simpleJobLauncher.setTaskExecutor(new SyncTaskExecutor());
+		return simpleJobLauncher;
 	}
 	
 	public Job job(){
-		JobRepository jobRepository = jobRepository();
+		JobRepository jobRepository = Summer.rain().getBean(JobRepository.class);
+		
 		Job job = new JobBuilder("job - 1")
 				.repository(jobRepository)
-				.start(step1(jobRepository))
+				.start(step1())
 				.build();
 		return job;
 	}
 	
-	public Step step1(JobRepository jobRepository){
+	public Step step1(){
+		JobRepository jobRepository = Summer.rain().getBean(JobRepository.class);
+		
+		FlatFileItemReader<PersonItem> reader = new FlatFileItemReader<PersonItem>();
+		reader.setResource(new DefaultResourceLoader().getResource("file:D:\\test.txt"));
+		reader.setLineMapper(new PersonLineMapper());
+		PersonItemProcessor processor = new PersonItemProcessor();
+		PersonItemWriter writer = new PersonItemWriter();
+		
+		TaskExecutor taskExecutor = new SimpleAsyncTaskExecutor();
 		Step step = new StepBuilder("step - 1")
 				.repository(jobRepository)
 				.transactionManager(new ResourcelessTransactionManager())
-				.<PersonItem, PersonEntity>chunk(10)
-				.reader(new FlatFileItemReader<PersonItem>())
-				.processor()
-				.writer()
+				.<PersonItem, PersonEntity>chunk(chunkSize)
+				.reader(reader)
+				.processor(processor)
+				.writer(writer)
+				.taskExecutor(taskExecutor )
 				.build();
 		return step;
 	}
