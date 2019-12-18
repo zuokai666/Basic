@@ -33,7 +33,7 @@ public class VisitRequestTask implements Runnable{
 	public void run() {
         try {
         	CloseableHttpClient _httpClient = (CloseableHttpClient) httpClient;
-    		//请求 - 关于安徽医科大学财务处中华人民共和国会计法的访问次数统计
+    		//请求 - 关于安徽医科大学财务处中华人民共和国会计法的访问次数统计，这B返回关闭
             HttpGet httpGet = new HttpGet("http://cwc.ahmu.edu.cn/_visitcount?siteId=42&type=3&articleId=66495");
             CloseableHttpResponse response = _httpClient.execute(httpGet);
             if(response.getStatusLine().getStatusCode() == HttpStatus.SC_OK){
@@ -42,7 +42,7 @@ public class VisitRequestTask implements Runnable{
             		log.debug("Global Success request Count [{}]", count);
             	}
             }
-            log.debug("响应体内容：" + EntityUtils.toString(response.getEntity()));
+            EntityUtils.consume(response.getEntity());//内部已经关闭，无用
         } catch (Exception e) {
             log.error("", e);
         }

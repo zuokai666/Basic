@@ -6,6 +6,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,6 +39,7 @@ public class VisitD2P9Task implements Runnable{
             		log.debug("Global Success request Count [{}]", count);
             	}
             }
+            EntityUtils.consume(response.getEntity());//归还连接操作
         } catch (Exception e) {
             log.error("", e);
         }

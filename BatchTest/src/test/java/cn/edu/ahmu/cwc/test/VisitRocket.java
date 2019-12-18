@@ -20,7 +20,7 @@ public class VisitRocket {
         AtomicInteger globalSuccessCount = new AtomicInteger(0);
         StopWatch stopWatch = new StopWatch();
         stopWatch.start("请求任务");
-        for(int i=0;i<3;i++){
+        for(int i=0;i<1;i++){
 //        	executorService.execute(new VisitRequestTask(globalSuccessCount));
         	executorService.execute(new VisitD2P9Task(globalSuccessCount));
         }
@@ -32,5 +32,6 @@ public class VisitRocket {
 		}
         stopWatch.normalStop();
         log.info("Global Success request Count [{}]", globalSuccessCount.get());
+//      LockSupport.park();
 	}
 }

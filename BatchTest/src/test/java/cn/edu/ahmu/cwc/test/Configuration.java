@@ -6,6 +6,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.impl.client.HttpClients;
 
 import com.zk.basic.beans.factory.Summer;
@@ -18,8 +19,11 @@ public class Configuration {
 	}
 	
 	public HttpClient httpClient(){
-//		return HttpClients.custom().setMaxConnTotal(10).build();
-		return HttpClients.createDefault();
+		RequestConfig config = RequestConfig.custom().setConnectTimeout(10_000).build();
+		return HttpClients.custom()
+				.setDefaultRequestConfig(config)
+				.setMaxConnTotal(1)
+				.build();
 	}
 	
 	public ExecutorService executorService(){
