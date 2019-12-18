@@ -4,7 +4,7 @@
 	<groupId>com.zk</groupId>
 	<artifactId>BatchTest</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-
+	
 	<dependencies>
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -25,6 +25,11 @@
 			<groupId>com.zk</groupId>
 			<artifactId>Framework</artifactId>
 			<version>3.0.7.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.5.2</version>
 		</dependency>
 	</dependencies>
 </project>
