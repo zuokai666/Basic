@@ -22,11 +22,13 @@ public class Configuration {
 		RequestConfig config = RequestConfig.custom().setConnectTimeout(10_000).build();
 		return HttpClients.custom()
 				.setDefaultRequestConfig(config)
-				.setMaxConnTotal(1)
+				.setMaxConnTotal(50)
 				.build();
 	}
 	
 	public ExecutorService executorService(){
-		return new ThreadPoolExecutor(50, 50, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
+		ExecutorService threadPoolExecutor = new ThreadPoolExecutor(50, 50, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
+//		threadPoolExecutor = new ThreadPool();
+		return threadPoolExecutor;
 	}
 }

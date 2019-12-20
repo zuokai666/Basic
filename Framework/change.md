@@ -59,6 +59,16 @@
 解决：暂无<br/>
 关键词：暂无<br/>
 
+日期：2019年12月19日<br/>
+模块：java.net.InetAddress<br/>
+问题：域名解析的分析<br/>
+分析：首先查找缓存，如果没有命中则查询域名服务器，其中涉及到缓存策略，cache有两个，即有效DNS解析的cache（addressCache）和无效DNS解析的cache（negativeCache）<br/>
+
+InetAddressCachePolicy.NEVER 从不缓存
+InetAddressCachePolicy.FOREVER 永远缓存
+InetAddressCachePolicy.DEFAULT_POSITIVE 30s时间缓存
+
+关键词：缓存与策略模式<br/>
 
 
 

@@ -4,7 +4,7 @@
 	<groupId>com.zk</groupId>
 	<artifactId>BatchTest</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	
+
 	<dependencies>
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -30,6 +30,11 @@
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
 			<version>4.5.2</version>
+		</dependency>
+		<dependency>
+			<groupId>com.googlecode.java-ipv6</groupId>
+			<artifactId>java-ipv6</artifactId>
+			<version>0.17</version>
 		</dependency>
 	</dependencies>
 </project>

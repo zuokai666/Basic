@@ -17,3 +17,5 @@ TCP    172.30.101.29:49865    210.45.99.12:80        TIME_WAIT       0
 
 TIME_WAIT是什么情况？
 
+
+netstat -ano | findstr "121.42.143.23"

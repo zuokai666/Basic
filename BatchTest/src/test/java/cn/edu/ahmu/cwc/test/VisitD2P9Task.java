@@ -31,7 +31,7 @@ public class VisitD2P9Task implements Runnable{
 	@Override
 	public void run() {
         try {
-            HttpGet httpGet = new HttpGet("http://www.d2p9.com/");
+            HttpGet httpGet = new HttpGet("http://www.d2p9.com1/");
             HttpResponse response = httpClient.execute(httpGet);
             if(response.getStatusLine().getStatusCode() == HttpStatus.SC_OK){
             	int count = globalSuccessCount.incrementAndGet();
