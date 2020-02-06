@@ -1,0 +1,4 @@
+利用完全二叉堆衍生出的一种排序算法，可以在原地排序，时间复杂度为O(nlogn)。有点类似于选择排序，选择出极值的原理。
+
+@see /KnowledgeBase/src/kb/dsa/sort/HeapSort.java
+

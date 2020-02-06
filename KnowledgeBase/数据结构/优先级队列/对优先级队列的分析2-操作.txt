@@ -1,0 +1,53 @@
+kb_time_20200131
+kb_abstract_对优先级队列的分析2-操作
+kb_tag_PriorityQueue
+
+数组为形，完全二叉树为神，是为完全二叉堆也。我们已经选择了完全二叉堆作为优先级队列的底层数据结构，然后分析一下一些常用操作：
+1.插入与上滤
+2.删除与下滤
+3.堆化(自下而上的下滤)
+
+借助java.util.PriorityQueue<E>来分析这三个操作
+
+1.插入与上滤siftUp
+	
+	private void siftUp(int k, E x) {
+        Comparable<? super E> key = (Comparable<? super E>) x;
+        while (k > 0) {
+            int parent = (k - 1) >>> 1;
+            Object e = queue[parent];
+            if (key.compareTo((E) e) >= 0)//根据java.lang.Comparable.compareTo()的定义，key>=e，所以此队列为最小堆
+                break;
+            queue[k] = e;
+            k = parent;
+        }
+        queue[k] = key;
+    }
+
+2.删除与下滤siftDown
+
+	private void siftDown(int k, E x) {
+        Comparable<? super E> key = (Comparable<? super E>)x;
+        int half = size >>> 1;
+        while (k < half) {
+            int child = (k << 1) + 1;
+            Object c = queue[child];
+            int right = child + 1;
+            if (right < size && ((Comparable<? super E>) c).compareTo((E) queue[right]) > 0)
+                c = queue[child = right];
+            if (key.compareTo((E) c) <= 0)
+                break;
+            queue[k] = c;
+            k = child;
+        }
+        queue[k] = key;
+    }
+    
+3.堆化(自下而上的下滤)
+	
+	private void heapify() {
+        for (int i = (size >>> 1) - 1; i >= 0; i--)//自下而上
+            siftDown(i, (E) queue[i]);//下滤
+    }
+
+

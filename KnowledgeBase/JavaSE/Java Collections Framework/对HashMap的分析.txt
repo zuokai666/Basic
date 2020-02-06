@@ -1,0 +1,41 @@
+kb_time_20200202
+kb_abstract_对HashMap的分析
+kb_tag_HashMap
+
+关于节点类型：一个是Node，一个是TreeNode
+	
+	public class Node<K,V> {
+        final int hash;
+        final K key;
+        V value;
+        Node<K,V> next;
+    }
+	
+	public class TreeNode<K,V> {
+        TreeNode<K,V> parent;
+        TreeNode<K,V> left;
+        TreeNode<K,V> right;
+        TreeNode<K,V> prev;
+        boolean red;
+    }
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+为什么Map桶中的个数超过8才转换为红黑树？
+在理想情况下，随机hashcode算法下所有bin中节点的分布频率会遵循泊松分布，我们可以看到，一个bin中链表长度达到8个元素的概率为0.00000006，
+几乎是不可能事件，所以之所以选择8，是根据概率统计决定的。
+
