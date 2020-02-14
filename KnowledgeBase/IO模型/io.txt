@@ -1,0 +1,21 @@
+IO模型：input/output
+涉及到的组件有httpclient（发起http请求的典型框架）与tomcat（http web容器的典型框架）
+一个是请求方，一个是服务提供方，都会涉及到IO模型，使用正确的模型会提高效率。
+
+几乎涉及到tcp连接的框架都会涉及到IO模型，例如Redis,Tomcat,Jetty
+
+以下是几种IO模型
+1.阻塞IO，blocking io
+public Response send(Request content);
+优点：单线程操作，编程简单，易于理解
+缺点：连接阻塞，写阻塞，读阻塞
+
+2.非阻塞IO，non blocking io
+
+3.异步IO，async blocking io
+
+
+
+
+
+

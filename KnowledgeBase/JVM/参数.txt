@@ -1,0 +1,25 @@
+-Xms100m 初始堆大小，也可以说最小堆大小
+-Xmx100m 最大堆内存，两者设置相同，避免堆自动扩展
+
+我们在使用年轻代的时候注意，一直只能使用90%的区域
+生产环境 -Xms 与 -Xmx 最好一样，避免抖动
+
+-XX:NewRatio=2 年轻代：年老代=1：2
+-XX:SurvivorRatio=8 两块S区：Eden区=2:8
+
+垃圾收集有关参数：
+-XX:+UseSerialGC - Serial + Serial Old
+@deprecated
+-XX:+UseParNewGC - ParNew + Serial Old
+-XX:+UseConcMarkSweepGC - ParNew + CMS
+-XX:+UseParallelGC - PS + Serial Old
+-XX:+UseParallelOldGC - PS + Parallel Old
+-XX:+UseG1GC
+
+
+
+
+
+
+
+
