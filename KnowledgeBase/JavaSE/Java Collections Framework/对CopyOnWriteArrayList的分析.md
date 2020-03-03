@@ -3,17 +3,17 @@
 我想从函数角度来分析，所以以下先列出List接口的函数
 	
 	public interface List<E> {
-	    boolean add(E e);//加锁
-	    boolean remove(Object o);//无锁
-	    E get(int index);//无锁
-	    Iterator<E> iterator();//无锁
+	    boolean add(E e);//写操作
+	    boolean remove(Object o);//写操作
+	    E get(int index);//读操作
+	    Iterator<E> iterator();//读操作
 	}
 
 第一个，boolean add(E e);//加锁
 
 使用ReentrantLock加锁，保证线程安全，首先获取原数组，创建大小加一的新数组，原数据原封不动的复制过来，结尾设置新元素，最后重新设置array的引用。其中array的引用标记了volatile，保证线程间可见性。另外，函数不会更改旧数组元素，保证不变性。
 
-第二个，boolean remove(Object o);
+第二个，boolean remove(Object o);//加锁
 
 原理上同。同样的，函数不会更改旧数组元素，保证不变性。
 
@@ -26,6 +26,8 @@
 为什么不加锁可以保证线程安全呢？因为这里获取的是一个不变的snapshot，后续的遍历是针对此不变的快照，自然没有线程问题。
 
 ## 这里引出了我的思考，同样都是保证线程安全，CopyOnWriteArrayList和Vector有什么根本区别呢？什么样的因造就效率差别的果呢？
+
+以空间换效率
 
 策略不同。同样都是数组，vector一直只使用一个数组，在之基础上进行add/remove，所以读操作必须加锁。而因为引入了快照数组的概念，所以COW会在写操作上带来一定的性能损失，好处就是读不加锁也可保证线程安全。因此，从COW的策略和设计初衷来看，只有在读多写少多线程竞争厉害的情况下，使用COW最佳，因为在此场景下完美切入COW的优点。相反，对于竞争不激烈，读写一半一半的情况，使用vector又有何不可呢，况且我们还能节省申请数组空间，节省复制数据的时间。终归来说，COW不是神，不能解决我们所有的问题，只有掌握它的特性，才能在合适的场景使用合适的集合。
 
