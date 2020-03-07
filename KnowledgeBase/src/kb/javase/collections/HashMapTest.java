@@ -7,9 +7,9 @@ public class HashMapTest {
 	public static void main(String[] args) {
 		HashMap<Integer, Integer> map = new HashMap<>();
 		
-		for(int i=0;i<20;i++){
+		for(int i=0;i<200;i++){
 			System.err.println(i);
-			map.put(i, i);
+			map.put(i * 16, i);
 		}
 	}
 }

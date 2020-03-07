@@ -20,11 +20,21 @@ kb_tag_HashMap
     }
 	
 
+HashMap是数组+链表+红黑树（JDK1.8增加了红黑树部分）实现的
 
+从ADT来分析：
+	
+	void put(Key key, Value value);
+	Value get(Key key);
+	void remove(Key key);
+	
+put:
+计算根据hashcode()重新计算，if(key == null) hash = 0;从这里看出hashmap实际上是支持空指针的
+hash = h ^ (h >>> 16);
 
-
-
-
+如果发现数组为空，初始化数组。
+如果发现位置为空，则将元素放入数组中。hash函数使用取模法，因为数组长度是2的倍数，所以简便操作(length - 1) & hash。
+如果发现位置不为空，则从首元素开始判断hash与equals是否相等。
 
 
 

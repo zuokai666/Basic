@@ -1,8 +1,9 @@
--Xms100m 初始堆大小，也可以说最小堆大小
--Xmx100m 最大堆内存，两者设置相同，避免堆自动扩展
+-Xms300M 初始堆大小
+-Xmx300M 最大堆内存
+-Xss1M 线程栈大小[ThreadStackSize]
+-Xmn200M 年轻代大小
 
-我们在使用年轻代的时候注意，一直只能使用90%的区域
-生产环境 -Xms 与 -Xmx 最好一样，避免抖动
+我们在使用年轻代的时候注意，一直只能使用90%的区域，生产环境 -Xms 与 -Xmx 最好一样，避免抖动
 
 -XX:NewRatio=2 年轻代：年老代=1：2
 -XX:SurvivorRatio=8 两块S区：Eden区=2:8
@@ -19,7 +20,14 @@
 
 
 
+-XX:+PrintGCDetails 打印GC的详细信息
+-XX:+PrintCommandLineFlags 打印启动虚拟机时输出的非稳定参数
+-XX:+PrintFlagsFinal 输出所有的参数与默认值
 
 
+-XX:PretenureSizeThreshold 无默认值，单位byte，直接晋升到老年代对象的大小
+-XX:MaxTenuringThreshold=15 默认值15，晋升到老年代的对象年龄
+
+-XX:MaxGCPauseMillis=200
 
 
