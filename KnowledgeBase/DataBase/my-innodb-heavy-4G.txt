@@ -1,0 +1,67 @@
+# *** INNODB 指定参数 ***
+
+# 缓冲池大小
+innodb_buffer_pool_size = 2G
+# 重做日志缓冲池大小
+innodb_log_buffer_size = 8M
+# 额外的内存池被用来存储元信息
+innodb_additional_mem_pool_size = 16M
+
+
+# 文件读写线程数目设置
+innodb_write_io_threads = 8
+innodb_read_io_threads = 8
+
+
+# 日志个数
+innodb_log_files_in_group = 2
+# 日志大小
+innodb_log_file_size = 24M
+
+例子：
+ib_logfile0 24M
+ib_logfile1 24M
+
+# 最大脏页比例
+innodb_max_dirty_pages_pct = 75
+# 刷入文件的在脏页的数量
+innodb_io_capacity = 200
+
+# 锁等待超时时间s
+innodb_lock_wait_timeout = 120
+
+
+# 日志文件参数设置
+
+# 错误日志
+log-error=E:/software/MySQL/Table/error/error1.log
+#二进制日志文件比较大，可以再my.cnf中设置二进制日志文件的过期时间，这样mysql就会自动删除到期的日志文件，节省磁盘空间：
+log-bin=E:/software/MySQL/Table/binary/logbin
+#expire_logs_days=5
+
+# 查询日志文件
+log=E:/software/MySQL/Table/querylog/querylog1.log
+
+#执行超过3秒的sql会被记录
+long_query_time=3
+# 将查询返回较慢的语句进行记录
+log-slow-queries=E:/software/MySQL/Table/queryslowlog/queryslowlog1.log
+
+# 为每一个innodb类型的表创建单独的表空间文件.ibd：数据，索引，插入缓冲
+innodb_file_per_table = 1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

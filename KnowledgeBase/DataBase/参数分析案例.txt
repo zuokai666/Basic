@@ -1,0 +1,16 @@
+
+本地MySQL配置：
+innodb_additional_mem_pool_size	2097152             2M
+innodb_buffer_pool_size	49283072                   47M
+innodb_log_buffer_size	1048576                     1M
+
+----------------------
+BUFFER POOL AND MEMORY
+----------------------
+Total memory allocated 50446336; in additional pool allocated 0
+Dictionary memory allocated 52142
+Buffer pool size   3008（页的总数）               3008 * (16K) = 47M
+Free buffers       2646（空闲的页）               空闲页比例：88%，数据库压力小
+Database pages     361（已经使用的页）
+Old database pages 0
+Modified db pages  0（脏页）
