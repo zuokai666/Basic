@@ -1,10 +1,12 @@
+default-storage-engine = InnoDB
+
 # *** INNODB 指定参数 ***
 
-# 缓冲池大小
-innodb_buffer_pool_size = 2G
-# 重做日志缓冲池大小
+# 缓冲池
+innodb_buffer_pool_size = 2G    50~80%的物理内存大小
+# 重做日志缓冲池
 innodb_log_buffer_size = 8M
-# 额外的内存池被用来存储元信息
+# 额外的内存池
 innodb_additional_mem_pool_size = 16M
 
 
@@ -23,9 +25,9 @@ ib_logfile0 24M
 ib_logfile1 24M
 
 # 最大脏页比例
-innodb_max_dirty_pages_pct = 75
+innodb_max_dirty_pages_pct = 75 如果大于75%，才会刷新200个脏页
 # 刷入文件的在脏页的数量
-innodb_io_capacity = 200
+innodb_io_capacity = 200 如果硬盘为SSD，这里可以调高些
 
 # 锁等待超时时间s
 innodb_lock_wait_timeout = 120

@@ -1,4 +1,11 @@
-default-storage-engine = InnoDB
+
+InnoDB存储引擎特点：支持事务，行锁，外键，默认非锁定读，主要面向OLTP方面的应用。
+
+
+
+MySQL是如何保证在数据库发生异常情况下恢复到正常运行状态？
+
+
 
 InnoDB的线程模型：
 查看InnoDB状态的命令：show engine innodb status;
