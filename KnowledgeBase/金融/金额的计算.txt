@@ -4,4 +4,16 @@ kb_tag_BigDecimal
 
 使用BigDecimal来替代float，double基本类型的计算
 
-......
+浮点型变量在进行计算的时候会出现丢失精度的问题，例如：
+
+	System.out.println(0.05 + 0.01);//     0.060000000000000005
+	System.out.println(1.0 - 0.42);//      0.5800000000000001
+	System.out.println(4.015 * 100.0);// 401.49999999999994
+	System.out.println(123.3 / 100.0);//   1.2329999999999999
+	
+BigDecimal也存在精度丢失问题，需要避免。
+
+尽量使用java.math.BigDecimal.BigDecimal(String)构造函数
+
+
+

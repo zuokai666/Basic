@@ -14,6 +14,11 @@
 # 分布式唯一主键生成
 
 # 设计模式
+	
+	file:///E:/Information/zk/书籍/设计模式：可复用面向对象软件的基础.pdf
+	
+	软件设计模式概述
+	http://c.biancheng.net/view/1317.html
 
 # 锁升级
 
