@@ -1,0 +1,48 @@
+# ConcurrentHashMap Node analyse
+
+/*
+ * Encodings for Node hash fields. See above for explanation.
+ */
+static final int MOVED     = -1; // hash for forwarding nodes
+static final int TREEBIN   = -2; // hash for roots of trees
+static final int RESERVED  = -3; // hash for transient reservations
+static final int HASH_BITS = 0x7fffffff; // usable bits of normal node hash
+
+
+/* ---------------- Special Nodes -------------- */
+
+public class Node<K,V> {
+	
+    final int hash;
+    final K key;
+    volatile V val;
+    volatile Node<K,V> next;
+	 
+    /**
+     * Virtualized support for map.get(); overridden in subclasses.
+     */
+    Node<K,V> find(int h, Object k) {}
+}
+
+static final class ForwardingNode<K,V> extends Node<K,V> {
+	
+    final Node<K,V>[] nextTable;
+    ForwardingNode(Node<K,V>[] tab) {
+        super(MOVED, null, null, null);
+        this.nextTable = tab;
+    }
+}
+
+static final class TreeBin<K,V> extends Node<K,V> {
+	
+    TreeBin(TreeNode<K,V> b) {
+        super(TREEBIN, null, null, null);
+    }
+}
+
+
+
+
+
+
+
