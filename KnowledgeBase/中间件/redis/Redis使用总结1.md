@@ -20,6 +20,8 @@ https://blog.csdn.net/hukaijun/article/details/81010279
 	string，hash，list，set，sortedSet
 	
 5、redis的过期策略以及内存淘汰机制
+	
+	
 
 	定期随机删除+惰性删除策略
 	使用maxmemory-policy进行配置allkeys-lru，驱逐最近最少使用的所有key中的key。
