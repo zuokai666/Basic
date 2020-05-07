@@ -25,7 +25,7 @@ public class ClassicalQuickSort {
 		int e = j;
 		int pivot = arr[i];
 		while(b < e){
-			while((b < e) && (pivot <= arr[e])){
+			while((b < e) && (pivot <= arr[e])){//这个放前面判断，否则会有问题
 				e--;
 			}
 			while((b < e) && (arr[b] <= pivot)){

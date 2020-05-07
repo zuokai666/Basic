@@ -31,3 +31,7 @@
 -XX:MaxGCPauseMillis=200
 
 
+-XX:MaxDirectMemorySize
+-XX:+HeapDumpOnOutOfMemoryError
+
+【推荐】给 JVM 环境参数设置-XX:+HeapDumpOnOutOfMemoryError 参数，让 JVM 碰到 OOM 场 景时输出 dump 信息。 

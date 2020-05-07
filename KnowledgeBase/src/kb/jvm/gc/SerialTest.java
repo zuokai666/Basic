@@ -16,7 +16,7 @@ public class SerialTest {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		for(int i=0;i<20;i++){
+		for(int i=0;i<200000000;i++){
 			test();
 			if(i == 9 || i == 19){
 				Runtime.getRuntime().gc();
