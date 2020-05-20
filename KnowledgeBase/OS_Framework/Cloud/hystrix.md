@@ -34,6 +34,6 @@ private static final Integer default_circuitBreakerErrorThresholdPercentage = 50
 
 
 
-
+QPS（TPS）= 并发数 / 平均响应时间
 
 
