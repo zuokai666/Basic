@@ -45,7 +45,10 @@
 
 快速恢复是对丢失恢复机制的改进。在快速重传之后，不经过慢启动过程而直接进入拥塞避免阶段。每当快速重传后，置sshtesrh=cwnd/2、ewnd=ssthresh+3。此后，每收到一个重复确认，将cwnd值加1，直至收到对丢失报文段和其后若干报文段的累积确认后，置cwnd=ssthesrh，进入拥塞避免阶段。
 
+# AIMD思想
 
+AIMD英文全称：Additive Increase Multiplicative Decrease。
+TCP/IP模型中，属于运输层，为了解决拥塞控制的一个方法，即：加性增，乘性减。
 
 
 
